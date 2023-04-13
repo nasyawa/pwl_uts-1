@@ -24,7 +24,7 @@ class PasienController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($id)
+    public function create()
     {
         return view('pasien.form_pasien')->with('url_form', url('pasien'));
     }
@@ -82,7 +82,7 @@ class PasienController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'rm' => 'required|string|max:10, unique:pasien,rm,' . $id . ',rm',
+            'rm' => 'required|string|max:10, unique:pasien,rm,' . $request->rm . ',rm',
             'nama' => 'required|string|max:50',
             'alamat' => 'required|string|max:100',
             'jk' => 'required|string',

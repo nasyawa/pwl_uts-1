@@ -21,8 +21,17 @@ class DaftarController extends Controller
             ->join('dokter', 'daftar.id_dokter', '=', 'dokter.id_dokter')
             ->join('users', 'daftar.id_user', '=', 'users.id')
             ->join('poli', 'dokter.id_poli', '=', 'poli.id_poli')
-            ->select('daftar.*', 'dokter.nama as nama_dokter', 'pasien.*', 'pasien.nama as nama_pasien', 'dokter.*', 'users.*', 'poli.*')
-            ->get();
+            ->select(
+                'daftar.*',
+                'dokter.nama as nama_dokter',
+                'pasien.*',
+                'pasien.nama as nama_pasien',
+                'users.nama as nama_perawat',
+                'dokter.*',
+                'users.*',
+                'poli.*'
+            )
+            ->orderBy('daftar.id_daftar')->simplePaginate(3);
 
         return view('pendaftaran.pendaftaran')->with('data', $data);
     }
@@ -34,13 +43,14 @@ class DaftarController extends Controller
      */
     public function create($id)
     {
-        $data2 = pasien::find($id);
-        $data = dokter::join('poli', 'dokter.id_poli', 'poli.id_poli')
+        $pasien = pasien::find($id);
+        $dokter = dokter::join('poli', 'dokter.id_poli', 'poli.id_poli')
             ->select('dokter.*', 'poli.*')->get();
+
         return view('pendaftaran.form_pendaftaran')
             ->with('url_form', url('/pendaftaran'))
-            ->with('datas', $data)
-            ->with('pasien', $data2);
+            ->with('datas', $dokter)
+            ->with('pasien', $pasien);
     }
 
     /**
@@ -51,14 +61,16 @@ class DaftarController extends Controller
      */
     public function store(Request $request)
     {
-        $data = daftar::insert('daftar')->values([
-            'id_pasien' => $request->daftar,
-            'id_dokter' => $request->id_daftar,
-            'id_user' => Auth::user()->id,
-            'keluhan' => $request->keluhan
+        $user = Auth::user()->id;
+
+        $data = daftar::create([
+            'id_pasien' => $request->input('id_pasien'),
+            'id_dokter' => $request->input('id_dokter'),
+            'keluhan' => $request->input('keluhan'),
+            'id_user' => $user
         ]);
 
-        return redirect('daftar');
+        return redirect('pendaftaran');
     }
 
     /**
@@ -78,9 +90,18 @@ class DaftarController extends Controller
      * @param  \App\Models\daftar  $daftar
      * @return \Illuminate\Http\Response
      */
-    public function edit(daftar $daftar)
+    public function edit($id)
     {
-        //
+        $daftar = daftar::find($id);
+        $pasien = pasien::find($daftar->id_pasien);
+        $dokter = dokter::join('poli', 'dokter.id_poli', 'poli.id_poli')
+            ->select('dokter.*', 'poli.*')->get();
+
+        return view('pendaftaran.form_pendaftaran')
+            ->with('datas', $dokter)
+            ->with('pasien', $pasien)
+            ->with('data', $daftar)
+            ->with('url_form', url('/pasien/' . $id));
     }
 
     /**
@@ -90,9 +111,18 @@ class DaftarController extends Controller
      * @param  \App\Models\daftar  $daftar
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, daftar $daftar)
+    public function update(Request $request, $id)
     {
-        //
+        $user = Auth::user()->id;
+
+        $data = daftar::where('id_pendaftaran', '=', $id)->update([
+            'id_pasien' => $request->input('id_pasien'),
+            'id_dokter' => $request->input('id_dokter'),
+            'keluhan' => $request->input('keluhan'),
+            'id_user' => $user
+        ]);
+
+        return redirect('pendaftaran');
     }
 
     /**

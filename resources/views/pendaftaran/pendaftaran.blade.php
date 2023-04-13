@@ -23,7 +23,6 @@
         <div class="card">
             <!-- /.card-header -->
             <div class="card-body">
-                <a href="{{url('pasien/create')}}" class="btn btn-sm btn-success my-2">Tambah Data</a>
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -31,24 +30,24 @@
                             <th>ID</th>
                             <th>No RM</th>
                             <th>Nama Pasien</th>
-                            <th>Alamat</th>
-                            <th>Jenis Kelamin</th>
                             <th>Dokter</th>
                             <th>Poli</th>
+                            <th>Perawat</th>
+                            <th>Keluhan</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if($data->count() > 0)
                         @foreach($data as $i => $h)
                         <tr>
-                            <td>{{$loop -> iteration}}</td>
+                            <td>{{($data->currentPage()-1)*$data->perPage()+$i+1}}</td>
                             <td>{{$h->id_pasien}}</td>
                             <td>{{$h->rm}}</td>
                             <td>{{$h->nama_pasien}}</td>
-                            <td>{{$h->alamat}}</td>
-                            <td>{{$h->jk}}</td>
                             <td>{{$h->nama_dokter}}</td>
                             <td>{{$h->poli}}</td>
+                            <td>{{$h->nama_perawat}}</td>
+                            <td>{{$h->keluhan}}</td>
                             <td>
                                 <a href="{{ url('/pendaftaran/'. $h->id_daftar.'/edit') }}" class="btn btn-sm btn-warning">Edit</a>
                                 <form method="POST" action="{{ url('/pasien/'.$h->id_daftar) }}">
@@ -69,7 +68,7 @@
             </div>
             <div class="card-footer clearfix">
                 <div class="row">
-
+                    {{ $data->links() }}
                 </div>
             </div>
             <!-- /.card-body -->

@@ -10,7 +10,7 @@ class daftar extends Model
 {
     use HasFactory;
     protected $table = 'daftar';
-    protected $primatyKey = 'id_daftar';
+    protected $primaryKey = 'id_daftar';
 
     protected $fillable = [
         'id_pasien',

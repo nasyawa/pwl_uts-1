@@ -34,7 +34,8 @@
                             <div class="form-group">
                                 <label>Nomor RM</label>
                                 @if(isset($data))
-                                <input type="text" class="form-control" name="rm" value="{{ isset($data)? $data->rm : old('rm') }}" disabled>
+                                <input type="text" class="form-control" value="{{ isset($data)? $data->rm : old('rm') }}" disabled>
+                                <input type="hidden" name="rm" value="{{ isset($data)? $data->rm : old('rm') }}">
                                 @else
                                 <input type="text" class="form-control" name="rm" value="{{ isset($data)? $data->rm : old('rm') }}">
                                 @endif
@@ -57,7 +58,6 @@
                         <div class="col-sm-9">
                             <div class="form-group">
                                 <label>Alamat</label>
-                                <!-- <textarea type="text-area" class="form-control" name="alamat">{{ isset($data)? $data->alamat : old('alamat') }}</textarea> -->
                                 <input type="text" class="form-control" name="alamat" value="{{ isset($data)? $data->alamat : old('alamat') }}">
                                 @error('alamat')
                                 <span class="error invalid-feedback">{{$message}}</span>

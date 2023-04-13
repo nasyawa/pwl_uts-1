@@ -26,11 +26,18 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <div name="id" value="$pasien->id"></div>
                 <form action="{{ $url_form }}" method="POST">
                     @csrf
+                    {!! isset($data)? method_field('PUT') : '' !!}
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-1">
+                            <div class="form-group">
+                                <label>ID</label>
+                                <input type="text" class="form-control" value="{{ $pasien -> id_pasien }}" disabled>
+                                <input type="hidden" name="id_pasien" value="{{ $pasien -> id_pasien }}">
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
                             <div class="form-group">
                                 <label>Nomor RM</label>
                                 <input type="text" class="form-control" name="rm" value="{{ $pasien->rm }}" disabled>
@@ -62,18 +69,19 @@
                             <!-- select -->
                             <div class="form-group">
                                 <label>Dokter</label>
-                                <select class="form-control">
-                                    <option></option>
+                                <select class="form-control" name="id_dokter">
                                     @foreach($datas as $a)
-                                    <option name="id_dokter" value="{{$a -> id_dokter}}">{{$a ->nama}} - {{$a -> poli}}</option>
+                                    <option value="{{$a -> id_dokter}}" <?php if (isset($data)) {
+                                                                            if ($a->id_dokter == $data->id_dokter) { ?> selected <?php }
+                                                                                                                            } ?>>{{$a ->nama}} - {{$a -> poli}}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>Jenis Kelamin</label>
-                                <textarea name="keluhan" class="form-control"></textarea>
+                                <label>Keluhan</label>
+                                <input type="text" class="form-control" name="keluhan" value="{{isset($data)? $data->keluhan : old('keluhan')}}">
                             </div>
                         </div>
                     </div>
