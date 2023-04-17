@@ -6,12 +6,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Tabel Mahasiswa</h1>
+                    <h1>Tabel Dokter</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Tabel Mahasiswa</li>
+                        <li class="breadcrumb-item active">Tabel Dokter</li>
                     </ol>
                 </div>
             </div>
@@ -23,16 +23,14 @@
         <div class="card">
             <!-- /.card-header -->
             <div class="card-body">
-                <a href="{{url('pasien/create')}}" class="btn btn-sm btn-success my-2">Tambah Data</a>
+                <a href="{{url('dokter/create')}}" class="btn btn-sm btn-success my-2">Tambah Data</a>
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>ID</th>
-                            <th>No RM</th>
-                            <th>Nama Pasien</th>
-                            <th>Alamat</th>
-                            <th>Jenis Kelamin</th>
+                            <th>ID Dokter</th>
+                            <th>Nama</th>
+                            <th>ID Poli</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,15 +38,13 @@
                         @foreach($data as $i => $h)
                         <tr>
                             <td>{{($data->currentPage()-1)*$data->perPage()+$i+1}}</td>
-                            <td>{{$h->id_pasien}}</td>
-                            <td>{{$h->rm}}</td>
+                            <td>{{$h->id_dokter}}</td>
                             <td>{{$h->nama}}</td>
-                            <td>{{$h->alamat}}</td>
-                            <td>{{$h->jk}}</td>
+                            <td>{{$h->id_poli}}</td>
                             <td>
-                                <a href="{{ url('/pasien/'. $h->id_pasien.'/edit') }}" class="btn btn-sm btn-warning">Edit</a>
-                                <a href="{{ url('/pendaftaran/'. $h->id_pasien.'/daftar') }}" class="btn btn-sm btn-primary">Daftar</a>
-                                <form method="POST" action="{{ url('/pasien/'.$h->id_pasien) }}">
+                                <a href="{{ url('/dokter'. $h->id_dokter.'/edit') }}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{{ url('/pendaftaran/'. $h->id_dokter.'/daftar') }}" class="btn btn-sm btn-primary">Daftar</a>
+                                <form method="POST" action="{{ url('/dokter/'.$h->id_dokter) }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" onclick="alert('Data Ingin Dihapus ?')">Hapus</button>

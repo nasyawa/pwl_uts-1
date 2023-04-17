@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\dokter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DokterController extends Controller
 {
@@ -14,7 +15,8 @@ class DokterController extends Controller
      */
     public function index()
     {
-        //
+        $data = DB::table('dokter')->orderBy('id_dokter')->simplePaginate(5);
+        return view('dokter.dokter')->with('data', $data);
     }
 
     /**
@@ -24,7 +26,7 @@ class DokterController extends Controller
      */
     public function create()
     {
-        //
+        return view('dokter.form_dokter')->with('url_form', url('/dokter'));
     }
 
     /**
@@ -35,7 +37,12 @@ class DokterController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama' => 'required|string|max:100',
+            'id_poli' => 'required|string|max:50',
+        ]);
+        $data = dokter::create($request->except(['_token']));
+        return redirect('dokter')->with('success', 'Berhasil Ditambahkan');
     }
 
     /**
@@ -55,9 +62,12 @@ class DokterController extends Controller
      * @param  \App\Models\dokter  $dokter
      * @return \Illuminate\Http\Response
      */
-    public function edit(dokter $dokter)
+    public function edit($id)
     {
-        //
+        $data = dokter::find($id);
+        return view('dokter.form_dokter')
+            ->with('url_form', url('/dokter/'.$id))
+            ->with('data', $data);
     }
 
     /**
@@ -67,9 +77,14 @@ class DokterController extends Controller
      * @param  \App\Models\dokter  $dokter
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, dokter $dokter)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'nama' => 'required|string|max:100',
+        ]);
+
+        $data = dokter::where('id_dokter', '=', $id)->update($request->except(['_token', '_method']));
+        return redirect('dokter')->with('message', 'berhasil');
     }
 
     /**
@@ -78,8 +93,10 @@ class DokterController extends Controller
      * @param  \App\Models\dokter  $dokter
      * @return \Illuminate\Http\Response
      */
-    public function destroy(dokter $dokter)
+    public function destroy(dokter $id)
     {
-        //
+        dokter::where('id','=',$id)->delete();
+        return redirect('dokter')
+        ->with('success','Berhasil Dihapus');
     }
 }

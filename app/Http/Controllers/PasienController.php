@@ -98,8 +98,10 @@ class PasienController extends Controller
      * @param  \App\Models\pasien  $pasien
      * @return \Illuminate\Http\Response
      */
-    public function destroy(pasien $pasien)
+    public function destroy($id)
     {
-        //
+        $data = pasien::where('id_pasien', '=', $id)->delete();
+
+        return redirect('pasien')->with('message', 'Data Berhasil Dihapus');
     }
 }

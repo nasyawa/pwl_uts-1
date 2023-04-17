@@ -53,7 +53,7 @@
                                 <form method="POST" action="{{ url('/pasien/'.$h->id_daftar) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="alert('Data Ingin Dihapus ?')">Hapus</button>
                                 </form>
                             </td>
                         </tr>

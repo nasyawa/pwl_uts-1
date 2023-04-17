@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\poli;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PoliController extends Controller
 {
@@ -14,7 +15,8 @@ class PoliController extends Controller
      */
     public function index()
     {
-        //
+        $data = DB::table('poli')->orderBy('id_poli')->simplePaginate(5);
+        return view('poli.poli')->with('data', $data);
     }
 
     /**
@@ -24,7 +26,7 @@ class PoliController extends Controller
      */
     public function create()
     {
-        //
+        return view('poli.form_poli')->with('url_form', url('/poli'));
     }
 
     /**
@@ -35,7 +37,12 @@ class PoliController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'poli' => 'required|string|max:100, unique:poli,poli',
+        ]);
+
+        $data = poli::create($request->except(['_token']));
+        return redirect('poli')->with('success', 'Berhasil Ditambahkan');
     }
 
     /**
@@ -55,9 +62,12 @@ class PoliController extends Controller
      * @param  \App\Models\poli  $poli
      * @return \Illuminate\Http\Response
      */
-    public function edit(poli $poli)
+    public function edit($id)
     {
-        //
+        $data = poli::find($id);
+        return view('poli.form_poli')
+            ->with('url_form', url('/poli/' . $id))
+            ->with('data', $data);
     }
 
     /**
@@ -67,9 +77,14 @@ class PoliController extends Controller
      * @param  \App\Models\poli  $poli
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, poli $poli)
+    public function update(Request $request,  $id)
     {
-        //
+        $request->validate([
+            'nama' => 'required|string|max:100',
+        ]);
+
+        $data = poli::where('id_poli', '=', $id)->update($request->except(['_token', '_method']));
+        return redirect('poli')->with('message', 'berhasil');
     }
 
     /**
@@ -78,8 +93,10 @@ class PoliController extends Controller
      * @param  \App\Models\poli  $poli
      * @return \Illuminate\Http\Response
      */
-    public function destroy(poli $poli)
+    public function destroy($id)
     {
-        //
+        poli::where('id','=',$id)->delete();
+        return redirect('poli')
+        ->with('success','Berhasil Dihapus');
     }
 }
